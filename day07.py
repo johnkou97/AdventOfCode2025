@@ -44,6 +44,9 @@ if __name__ == "__main__":
     print(f"Number of timelines the tachyon beam ends up on: {sum(trace_tracker[end_length, :])}")
 
     if args.visualize:
+        import os
+        os.makedirs('visualizations', exist_ok=True)
+
         plt.figure(figsize=(12, 10))
         plt.gca().set_facecolor('black')
         
@@ -66,5 +69,5 @@ if __name__ == "__main__":
         plt.ylim(len(maze) - 1, -10)
         
         plt.tight_layout()
-        plt.savefig('day07_visualization.png', dpi=150, bbox_inches='tight', facecolor='white')
+        plt.savefig('visualizations/day07_tree.png', dpi=300, bbox_inches='tight', facecolor='white')
         plt.close()
