@@ -1,5 +1,11 @@
 if __name__ == "__main__":
     import numpy as np
+    import matplotlib.pyplot as plt
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--visualize', '-v', action='store_true')
+    args = parser.parse_args()
 
     maze = []
     with open("inputs/day7.txt") as file:
@@ -36,3 +42,29 @@ if __name__ == "__main__":
 
     print(f"Number of splits for the tachyon beam: {split_counter}")
     print(f"Number of timelines the tachyon beam ends up on: {sum(trace_tracker[end_length, :])}")
+
+    if args.visualize:
+        plt.figure(figsize=(12, 10))
+        plt.gca().set_facecolor('black')
+        
+        beam_intensity = np.log1p(trace_tracker)
+        cmap = plt.get_cmap('inferno')
+
+        im = plt.imshow(beam_intensity, cmap=cmap, aspect='auto', interpolation='bilinear')
+        
+        plt.scatter(start[1], start[0], c='lime', marker='*', s=300, label='Start', edgecolors='white', linewidths=1.5)
+
+        split_rows, split_cols = np.where(maze == '^')
+        plt.scatter(split_cols, split_rows, c='red', marker='x', s=20, alpha=0.7, label='Split points')
+        
+        plt.title('Tachyon Beam Intensity Map', fontsize=16, fontweight='bold', pad=20)
+        plt.xlabel('Column Position', fontsize=12)
+        plt.ylabel('Row Position', fontsize=12)
+        plt.legend(loc='upper right', fontsize=10)
+        cbar = plt.colorbar(im, label='log(Count + 1)')
+        cbar.ax.tick_params(labelsize=10)
+        plt.ylim(len(maze) - 1, -10)
+        
+        plt.tight_layout()
+        plt.savefig('day07_visualization.png', dpi=150, bbox_inches='tight', facecolor='white')
+        plt.close()
